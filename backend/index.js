@@ -1,10 +1,11 @@
-const express = require("express");
+import express from "express";
 import userRoute from "./routes/user.route.js";
+import cors from "cors";
 const app = express();
-
-const mongoose = require("mongoose");
-mongoose
-  .connect("mongodb://127.0.0.1:27017/authDemo")
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+import { connect } from "mongoose";
+connect("mongodb://127.0.0.1:27017/authDemo")
   .then(() => {
     console.log("db connection open");
   })

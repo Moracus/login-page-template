@@ -1,11 +1,13 @@
-const bcrypt = require("bcrypt");
-const UserModel = require("../models/user");
+import bcrypt from "bcrypt";
+import UserModel from "../models/user.js";
 
 export const registerUser = async (req, res) => {
+  console.log(req.body);
   try {
-    const { password, email } = request.body;
+    const { password, email, username } = req.body;
     const hash = await bcrypt.hash(password, 12);
     const user = new UserModel({
+      username,
       email,
       password: hash,
     });
@@ -25,8 +27,8 @@ export const registerUser = async (req, res) => {
 };
 export const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await UserModel.findOne({ email });
+    const { username, password } = req.body;
+    const user = await UserModel.findOne({ username });
     if (!user) {
       return res.status(401).json({ message: "Invalid email or password" });
     }
@@ -38,11 +40,9 @@ export const login = async (req, res) => {
       message: "Login successful",
       user: {
         _id: user._id,
-        name: user.name,
+        name: user.username,
         email: user.email,
-        pic: user.pic,
       },
-      token,
     });
   } catch (error) {
     console.error("Error during login:", error);

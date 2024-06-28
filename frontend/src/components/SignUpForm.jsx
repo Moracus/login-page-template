@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useForm, Controller } from "react-hook-form";
 import { TextField, Stack } from "@mui/material";
-
+import axios from "axios";
 const SignUpForm = ({ setOnLogIn }) => {
   const {
     handleSubmit,
@@ -13,13 +13,21 @@ const SignUpForm = ({ setOnLogIn }) => {
       password: "",
     },
   });
-
-  const onSubmit = (data) => {
-    setOnLogIn(true);
-    console.log(data);
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  const onSubmit = async (data) => {
+    try {
+      const res = await axios.post(backendUrl + "/register", data, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
+      if (res.status == 201) {
+        setOnLogIn(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
-
-  console.log(errors);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full ">
